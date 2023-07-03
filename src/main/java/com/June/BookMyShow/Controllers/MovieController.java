@@ -14,8 +14,8 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
-    @PostMapping("/add")
-    public String addMovie(@RequestBody MovieRequestDTO movieRequestDTO){
-        return movieService.addMovie(movieRequestDTO);
-    }
+//    @PostMapping("/add")
+//    public String addMovie(@RequestBody MovieRequestDTO movieRequestDTO){
+//        return movieService.addMovie(movieRequestDTO);
+//    }
 }
