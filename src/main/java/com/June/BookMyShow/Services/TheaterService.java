@@ -41,7 +41,7 @@ public class TheaterService {
             }
             TheaterSeat theaterSeat = new TheaterSeat();
             theaterSeat.setSeatNo(seatNo);
-            theaterSeat.setTheater(theater); //storing parent info in child
+            theaterSeat.setTheater(theater);
             theaterSeat.setSeatType(SeatType.CLASSIC);
             theaterSeatList.add(theaterSeat);
         }
