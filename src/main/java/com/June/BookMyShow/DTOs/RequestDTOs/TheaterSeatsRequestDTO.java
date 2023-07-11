@@ -7,5 +7,5 @@ public class TheaterSeatsRequestDTO {
     private int noOfSeatsIn1Row;
     private int noOfClassicSeats;
     private int noOfPremiumSeats;
-    private int location;
+    private String location;
 }

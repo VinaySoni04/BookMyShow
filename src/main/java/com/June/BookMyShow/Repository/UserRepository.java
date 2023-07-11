@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     @Query(value = "select * from users where age>= :age",nativeQuery = true)
     List<User> findUserWithGreaterAge(int age);
+
+    Optional<User> findByEmailId(String emailId);
 }

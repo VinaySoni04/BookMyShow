@@ -15,4 +15,8 @@ public class TheaterSeat {
 
     @Enumerated(value = EnumType.STRING)
     private SeatType seatType;
+
+    @ManyToOne
+    @JoinColumn
+    private Theater theater;
 }

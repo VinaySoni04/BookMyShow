@@ -20,8 +20,8 @@ public class TheaterController {
         return theaterService.addTheater(theaterRequestDTO);
     }
 
-//    @PostMapping("/addTheaterSeats")
-//    public String addTheaterSeats(@RequestBody TheaterSeatsRequestDTO theaterSeatsRequestDTO){
-//        return theaterService.addTheaterSeats(theaterSeatsRequestDTO);
-//    }
+    @PostMapping("/addTheaterSeats")
+    public String addTheaterSeats(@RequestBody TheaterSeatsRequestDTO theaterSeatsRequestDTO){
+        return theaterService.addTheaterSeats(theaterSeatsRequestDTO);
+    }
 }
