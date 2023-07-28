@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +23,7 @@ public class Show {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private LocalTime time;
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn

@@ -51,6 +51,9 @@ public class TicketService {
         Ticket ticket=new Ticket();
         int totalPrice=calculateTotalPrice(show,ticketRequestDTO.getRequestedSeats());
         ticket.setTotalTicketsPrice(totalPrice);
+        if (ticketRequestDTO.getIsFood()==1){
+            totalPrice+=100;
+        }
         String bookedSeats=convertListToString(ticketRequestDTO.getRequestedSeats());
         ticket.setBookedSeats(bookedSeats);
 
@@ -69,14 +72,14 @@ public class TicketService {
 
         String body="Hii! "+user.getName()+"\n"+
                 "You have successfully booked a ticket. Please find the following details of your ticket \n"+
-                "Booked seats "+bookedSeats+"\n"+
-                "Movie name "+show.getMovie().getMovieName()+"\n"+
+                "Booked seats are:- "+bookedSeats+"\n"+
+                "Movie name:- "+show.getMovie().getMovieName()+"\n"+
                 "Show date is "+show.getDate()+"\n"+
                 "Show time is "+show.getTime()+"\n"+
                 "Enjoy the show!!"+"\n"+
                 "Thank You";
         simpleMailMessage.setSubject("Ticket Confirmation Mail");
-        simpleMailMessage.setFrom("");
+        simpleMailMessage.setFrom("dummy8597362@gmail.com");
         simpleMailMessage.setText(body);
         simpleMailMessage.setTo(user.getEmailId());
         emailSender.send(simpleMailMessage);

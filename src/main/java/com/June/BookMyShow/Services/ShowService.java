@@ -51,7 +51,7 @@ public class ShowService {
         theater.getShowList().add(show);
         theaterRepository.save(theater);
 
-        return "Show is added successfully and showId is"+show.getId();
+        return "Show is added successfully and showId is "+show.getId();
     }
 
     public String associateSeats(ShowSeatsRequestDTO showSeatsRequestDTO) throws ShowNotFoundException{

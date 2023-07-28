@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,7 @@ public class Movie {
 
     @Column(scale = 2)
     private double rating;
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;

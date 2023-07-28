@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -15,7 +16,7 @@ import java.util.Date;
 public class TicketResponseDTO {
     private String responseMessage;
     private LocalTime showTime;
-    private Date showDate;
+    private LocalDate showDate;
     private String movieName;
     private String theaterName;
     private String bookedSeats;

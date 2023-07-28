@@ -16,7 +16,7 @@ public class TheaterController {
     private TheaterService theaterService;
 
     @PostMapping("/add")
-    public String  addTheater(@RequestBody TheaterRequestDTO theaterRequestDTO){
+    public String addTheater(@RequestBody TheaterRequestDTO theaterRequestDTO){
         return theaterService.addTheater(theaterRequestDTO);
     }
 
