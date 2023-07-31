@@ -72,7 +72,7 @@ public class ShowService {
                 showSeat.setPrice(showSeatsRequestDTO.getPriceForPremiumSeats());
             showSeat.setShow(show);
             showSeat.setAvailable(true);
-            showSeat.setFoodAttached(false);
+            showSeat.setFoodAttached(true);
             showSeatList.add(showSeat);
         }
         showRepository.save(show);

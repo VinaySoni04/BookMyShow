@@ -3,6 +3,7 @@ package com.June.BookMyShow.Services;
 import com.June.BookMyShow.DTOs.RequestDTOs.TicketRequestDTO;
 import com.June.BookMyShow.DTOs.ResponseDTOs.TicketResponseDTO;
 import com.June.BookMyShow.Exceptions.ShowNotFoundException;
+import com.June.BookMyShow.Exceptions.TicketIdInvalidException;
 import com.June.BookMyShow.Exceptions.UserNotFoundException;
 import com.June.BookMyShow.Models.Show;
 import com.June.BookMyShow.Models.ShowSeat;
@@ -16,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,6 +74,7 @@ public class TicketService {
 
         String body="Hii! "+user.getName()+"\n"+
                 "You have successfully booked a ticket. Please find the following details of your ticket \n"+
+                "Your ticket id is"+ticket.getId()+"\n"+
                 "Booked seats are:- "+bookedSeats+"\n"+
                 "Movie name:- "+show.getMovie().getMovieName()+"\n"+
                 "Show date is "+show.getDate()+"\n"+
@@ -129,5 +132,34 @@ public class TicketService {
                 .totalPrice(ticket.getTotalTicketsPrice())
                 .build();
         return ticketResponseDTO;
+    }
+
+    public String cancelTicket(int ticketId) throws TicketIdInvalidException {
+        Optional<Ticket> ticketOpt=ticketRepository.findById(ticketId);
+        if (ticketOpt.isEmpty())
+            throw new TicketIdInvalidException("Invalid ticket id, Please enter correct ticket id");
+        Ticket ticket=ticketOpt.get();
+        List<ShowSeat> showSeatList=convertStringToList(ticket.getBookedSeats());
+        for (ShowSeat seatNo:showSeatList){
+            seatNo.setAvailable(true);
+        }
+        User user=ticket.getUser();
+        Show show=ticket.getShow();
+        user.getTicketList().remove(ticket);
+        show.getTicketList().remove(ticket);
+
+        ticketRepository.delete(ticket);
+        return "Ticket cancelled successfully!!";
+    }
+
+    private List<ShowSeat> convertStringToList(String bookedSeats) {
+        List<ShowSeat> seats=new ArrayList<>();
+        String[] seatArr=bookedSeats.split(" ");
+        ShowSeat seatNo=new ShowSeat();
+        for(String i:seatArr){
+            seatNo.setSeatNo(i);
+            seats.add(seatNo);
+        }
+        return seats;
     }
 }
