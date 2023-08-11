@@ -66,13 +66,16 @@ public class ShowService {
             ShowSeat showSeat=new ShowSeat();
             showSeat.setSeatNo(theaterSeat.getSeatNo());
             showSeat.setSeatType(theaterSeat.getSeatType());
-            if(showSeat.getSeatType().equals(SeatType.CLASSIC))
+            if(showSeat.getSeatType().equals(SeatType.CLASSIC)){
                 showSeat.setPrice(showSeatsRequestDTO.getPriceForClassicSeats());
-            else
+                showSeat.setFoodAttached(false);
+            }
+            else{
                 showSeat.setPrice(showSeatsRequestDTO.getPriceForPremiumSeats());
+                showSeat.setFoodAttached(true);
+            }
             showSeat.setShow(show);
             showSeat.setAvailable(true);
-            showSeat.setFoodAttached(true);
             showSeatList.add(showSeat);
         }
         showRepository.save(show);

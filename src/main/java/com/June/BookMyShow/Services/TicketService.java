@@ -5,10 +5,7 @@ import com.June.BookMyShow.DTOs.ResponseDTOs.TicketResponseDTO;
 import com.June.BookMyShow.Exceptions.ShowNotFoundException;
 import com.June.BookMyShow.Exceptions.TicketIdInvalidException;
 import com.June.BookMyShow.Exceptions.UserNotFoundException;
-import com.June.BookMyShow.Models.Show;
-import com.June.BookMyShow.Models.ShowSeat;
-import com.June.BookMyShow.Models.Ticket;
-import com.June.BookMyShow.Models.User;
+import com.June.BookMyShow.Models.*;
 import com.June.BookMyShow.Repository.ShowRepository;
 import com.June.BookMyShow.Repository.TicketRepository;
 import com.June.BookMyShow.Repository.UserRepository;
@@ -17,7 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +43,7 @@ public class TicketService {
             throw new ShowNotFoundException("Show is not available");
 
         Show show=showOpt.get();
-        boolean isValid=validateShowAvailability(show,ticketRequestDTO.getRequestedSeats());
+        boolean isValid=validateShowAvailability(show,ticketRequestDTO.getRequestedSeats(),showId);
         if (isValid==false)
             throw new Exception("Requested seats are not available, they are already booked!");
 
@@ -90,7 +87,7 @@ public class TicketService {
         return createTicketResponseDTO(show,ticket);
     }
 
-    private boolean validateShowAvailability(Show show, List<String> requestedSeats) {
+    private boolean validateShowAvailability(Show show, List<String> requestedSeats, int showId) {
         List<ShowSeat> showSeatList=show.getShowSeatList();
         for (ShowSeat showSeat:showSeatList){
             String seatNo=showSeat.getSeatNo();
@@ -135,31 +132,35 @@ public class TicketService {
     }
 
     public String cancelTicket(int ticketId) throws TicketIdInvalidException {
-        Optional<Ticket> ticketOpt=ticketRepository.findById(ticketId);
+        Optional<Ticket> ticketOpt = ticketRepository.findById(ticketId);
         if (ticketOpt.isEmpty())
             throw new TicketIdInvalidException("Invalid ticket id, Please enter correct ticket id");
-        Ticket ticket=ticketOpt.get();
-        List<ShowSeat> showSeatList=convertStringToList(ticket.getBookedSeats());
-        for (ShowSeat seatNo:showSeatList){
-            seatNo.setAvailable(true);
+        Ticket ticket = ticketOpt.get();
+        Show show = ticket.getShow();
+        User user = ticket.getUser();
+        user.getTicketList().remove(ticket);
+        String bookedSeats=ticket.getBookedSeats();
+        cancelShowSeats(show,bookedSeats);
+        List<Ticket> ticketList=ticketRepository.findAll();
+        for(Ticket ticket1:ticketList){
+            if (ticket1.getId()==ticketId){
+                ticketRepository.delete(ticket);
+                break;
+            }
         }
-        User user=ticket.getUser();
-        Show show=ticket.getShow();
         user.getTicketList().remove(ticket);
         show.getTicketList().remove(ticket);
-
         ticketRepository.delete(ticket);
         return "Ticket cancelled successfully!!";
     }
 
-    private List<ShowSeat> convertStringToList(String bookedSeats) {
-        List<ShowSeat> seats=new ArrayList<>();
-        String[] seatArr=bookedSeats.split(" ");
-        ShowSeat seatNo=new ShowSeat();
-        for(String i:seatArr){
-            seatNo.setSeatNo(i);
-            seats.add(seatNo);
+    private void cancelShowSeats(Show show, String bookedSeats) {
+        List<ShowSeat> showSeatList=show.getShowSeatList();
+        List<String> seats=Arrays.asList(bookedSeats.split(","));
+        for(ShowSeat showSeat:showSeatList){
+            if(seats.contains(showSeat.getSeatNo())) {
+                showSeat.setAvailable(true);
+            }
         }
-        return seats;
     }
 }
